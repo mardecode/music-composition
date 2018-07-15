@@ -11,7 +11,10 @@ data = joblib.load("notas.pkl")
 print(data.shape)
 
 n = len(data)
-data_x = data[0 : n - 1] 
+scaler =MinMaxScaler(feature_range=(0,1))
+data = scaler.fit_transform(data)
+
+data_x = data[0 : n - 1]
 data_y = data[1 : n]
 
 data_x = data_x.reshape(n - 1, 1, 3)
