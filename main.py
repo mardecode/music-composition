@@ -3,6 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import librosa.display
 
+from sklearn.externals import joblib
+
+
 def plot_piano_roll(midi, start_pitch, end_pitch, fs=100):
     # Use librosa's specshow function for displaying the piano roll
     librosa.display.specshow(midi.get_piano_roll(fs)[start_pitch:end_pitch],
@@ -54,10 +57,14 @@ def get_vector(file,n_instrument=0):
         notas[i-1][1] = aproximar(T/tempo)#notaActual.end#T#  /tempo#a
         notas[i-1][2] = P
 
+
         notaAnterior = notaActual
 
     return notas
 
+#joblib.dump(notas,"notas.pkl")
 
-for x in get_vector('midis/himno.mid',0):
+
+
+for x in get_vector('himno.mid',0):
     print (x)
