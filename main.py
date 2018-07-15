@@ -62,9 +62,9 @@ def get_vector(file,n_instrument=0):
 
     return notas
 
-#joblib.dump(notas,"notas.pkl")
+joblib.dump(get_vector('himno.mid',0),"notas.pkl")
 
 
 
-for x in get_vector('himno.mid',0):
-    print (x)
+#for x in get_vector('himno.mid',0):
+#    print (x)
