@@ -2,7 +2,7 @@ import pretty_midi as pm
 import numpy as np
 import matplotlib.pyplot as plt
 import librosa.display
-
+import os
 from sklearn.externals import joblib
 
 
@@ -26,6 +26,18 @@ def aproximar(d):
 def aproximarInversa(i, tempo):
     return duracionSet[int(i)]*tempo
 
+def read_midis(path, instrument = 0):
+    midis_p = os.listdir(path)
+    tempos = [0.0]
+    midis, tempos[0] = get_vector(path + "/" + midis_p[0], instrument)
+
+
+    for i in range(1, len(midis_p)):
+        mid, T = get_vector(path + "/" + midis_p[i], instrument)
+        midis = np.concatenate([midis, mid])
+        tempos.append(T)
+
+    return midis, tempos
 
 
 def get_vector(file,n_instrument=0):
@@ -39,19 +51,19 @@ def get_vector(file,n_instrument=0):
 
     notaAnterior = midi.instruments[n_instrument].notes[0]
 
-    plt.figure(figsize=(12, 4))
-    #plot_piano_roll(midi.instruments[n_instrument], 24, 84)
-    #plt.show()
+    # plt.figure(figsize=(12, 4))
+    # plot_piano_roll(midi.instruments[n_instrumen], 24, 84)
+    # plt.show()
 
     #print(notaAnterior)
     for i in range(0,nNotas):
         notaActual = midi.instruments[n_instrument].notes[i]
         dT = abs(notaActual.start - notaAnterior.start)
-        #print("DT " ,dT)
+        # print("DT " ,dT)
         T = abs(notaActual.end - notaActual.start )
-        #print("T " ,T)
+        # print("T " ,T)
         P = notaActual.pitch
-        #print("p " ,P)
+        # print("p " ,P)
         #print(notaActual)
         notas[i][0] = dT/tempo
         notas[i][1] = aproximar(T/tempo)
@@ -78,6 +90,12 @@ def reconstruirCancion(vector, tempo):
         inst.notes.append(pm.Note(100, int(p), start ,end))
         i+=1
     return rec
+
+
+midis, tempos = read_midis("chopin",0)
+
+joblib.dump(midis,"notas.pkl")
+joblib.dump(tempos,"tempos.pkl")
 
 #joblib.dump(get_vector('himno.mid',0),"notas.pkl")
 '''vec = Vector [dt, T , p]
