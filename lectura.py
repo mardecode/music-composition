@@ -14,6 +14,9 @@ def int2bin(n, maximo):
     return temp
 
 
+def bin2int(n):
+    return np.argmax(n)
+
 
 duracionSet = [0.0625, 0.125, 0.25, 0.5,1, 2,4]
 
@@ -42,7 +45,7 @@ def read_midis(path, instrument = 0):
             dts.append(mid[j][0])
             ts.append(mid[j][1])
             ps.append(mid[j][2])
-        tempos.append(T)
+        print(T)
 
     return (dts, ts, ps), tempos
 
@@ -80,17 +83,18 @@ ps = np.array(ps)
 n_classes = np.max(ps.flatten())
 ps = [int2bin(e, n_classes) for e in ps]
 
-scaler =MinMaxScaler(feature_range=(0,10))
+scaler_dt =MinMaxScaler(feature_range=(0,100))
+scaler_t =MinMaxScaler(feature_range=(0,100))
 # data = scaler.fit_transform(data)
 
 dts = np.array(dts)
 dts = dts.reshape(len(dts), 1)
-dts = scaler.fit_transform(dts)
+dts = scaler_dt.fit_transform(dts)
 dts = dts.reshape(len(dts), 1, 1)
 
 ts = np.array(ts)
 ts = ts.reshape(len(ts), 1)
-ts = scaler.fit_transform(ts)
+ts = scaler_t.fit_transform(ts)
 ts = ts.reshape(len(ts), 1, 1)
 
 ps = np.array(ps)
@@ -102,3 +106,7 @@ joblib.dump(dts,"dts.pkl")
 joblib.dump(ts,"ts.pkl")
 joblib.dump(ps,"ps.pkl")
 joblib.dump(tempos,"tempos.pkl")
+
+
+joblib.dump(scaler_dt,"scaler_dt.pkl")
+joblib.dump(scaler_t,"scaler_t.pkl")

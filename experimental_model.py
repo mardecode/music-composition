@@ -39,10 +39,10 @@ n_classes = 101
 
 
 input_dt = Input(shape = (1, 1), name = "input_dt")
-lstm_dt = CuDNNLSTM(128, return_sequences = True)(input_dt)
+lstm_dt = CuDNNLSTM(32, return_sequences = True)(input_dt)
 
 input_t = Input(shape = (1, 1), name = "input_t")
-lstm_t = CuDNNLSTM(128, return_sequences = True)(input_t)
+lstm_t = CuDNNLSTM(64, return_sequences = True)(input_t)
 
 input_p = Input(shape = (1, n_classes), name = "input_p")
 lstm_p = CuDNNLSTM(128, return_sequences = True)(input_p)
@@ -52,10 +52,10 @@ hold_input = concatenate([lstm_dt, lstm_t, lstm_p])
 
 main_lstm = CuDNNLSTM(256, return_sequences = True)(hold_input)
 
-lstm_dt_o = CuDNNLSTM(128)(main_lstm)
+lstm_dt_o = CuDNNLSTM(32)(main_lstm)
 dt_output = Dense(1, activation = "relu", name = "dt_output")(lstm_dt_o)
 
-lstm_t_o = CuDNNLSTM(128)(main_lstm)
+lstm_t_o = CuDNNLSTM(64)(main_lstm)
 t_output = Dense(1, activation = "relu", name = "t_output")(lstm_t_o)
 
 lstm_p_o = CuDNNLSTM(128)(main_lstm)
