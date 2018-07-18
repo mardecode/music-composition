@@ -102,11 +102,11 @@ ps = ps.reshape(len(ts), 1, 101)
 tempos = np.array(tempos)
 
 
-joblib.dump(dts,"dts.pkl")
-joblib.dump(ts,"ts.pkl")
-joblib.dump(ps,"ps.pkl")
-joblib.dump(tempos,"tempos.pkl")
+joblib.dump(dts,"datos/dts.pkl")
+joblib.dump(ts,"datos/ts.pkl")
+joblib.dump(ps,"datos/ps.pkl")
+joblib.dump(tempos,"datos/tempos.pkl")
 
 
-joblib.dump(scaler_dt,"scaler_dt.pkl")
-joblib.dump(scaler_t,"scaler_t.pkl")
+joblib.dump(scaler_dt,"datos/scaler_dt.pkl")
+joblib.dump(scaler_t,"datos/scaler_t.pkl")

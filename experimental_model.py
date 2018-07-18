@@ -50,6 +50,7 @@ lstm_p = CuDNNLSTM(128, return_sequences = True)(input_p)
 
 hold_input = concatenate([lstm_dt, lstm_t, lstm_p])
 
+
 main_lstm = CuDNNLSTM(256, return_sequences = True)(hold_input)
 
 lstm_dt_o = CuDNNLSTM(32)(main_lstm)
@@ -72,7 +73,9 @@ model.fit({'input_dt': i_dt, 'input_t': i_t, 'input_p': i_p},
 
           epochs=15, batch_size=128)
 
-model.save("modelo_experimental.h5")
+model.summary()
+
+model.save("modelos/modelo_experimental.h5")
 # metrics = {'dt_output': ['mse', 'accuracy'], 't_output': ['mse', 'accuracy'], 'p_output': ['mse', 'accuracy']},
 a, b, c = model.predict([i_dt[:3], i_t[:3], i_p[:3]])
 print("p: ", c)

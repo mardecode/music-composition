@@ -3,14 +3,14 @@ from sklearn.externals import joblib
 from funciones import *
 
 
-dt = joblib.load("dts.pkl")
-t = joblib.load("ts.pkl")
-p = joblib.load("ps.pkl")
-scaler_t = joblib.load("scaler_t.pkl")
-scaler_dt = joblib.load("scaler_dt.pkl")
+dt = joblib.load("datos/dts.pkl")
+t = joblib.load("datos/ts.pkl")
+p = joblib.load("datos/ps.pkl")
+scaler_t = joblib.load("datos/scaler_t.pkl")
+scaler_dt = joblib.load("datos/scaler_dt.pkl")
 
 
-modelo = load_model("modelo_experimental.h5")
+modelo = load_model("modelos/modelo_experimental.h5")
 
 
 n = len(dt)
