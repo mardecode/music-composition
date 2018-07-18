@@ -14,10 +14,8 @@ def plot_piano_roll(midi, start_pitch, end_pitch, fs=100):
 
 duracionSet = [0.0625, 0.125, 0.25, 0.5,1, 2,4]
 
-
-
 def aproximar(d):
-    aprox = 0.0
+    aprox = 0
     dist = abs(d - duracionSet[0])
     for i in range(1, len(duracionSet)):
         if abs(duracionSet[i] - d ) < dist:
@@ -25,6 +23,8 @@ def aproximar(d):
             aprox = i
     return aprox
 
+def aproximarInversa(i, tempo):
+    return duracionSet[int(i)]*tempo
 
 
 
@@ -40,31 +40,49 @@ def get_vector(file,n_instrument=0):
     notaAnterior = midi.instruments[n_instrument].notes[0]
 
     plt.figure(figsize=(12, 4))
-    plot_piano_roll(midi.instruments[n_instrument], 24, 84)
-    plt.show()
+    #plot_piano_roll(midi.instruments[n_instrument], 24, 84)
+    #plt.show()
 
     #print(notaAnterior)
-    for i in range(1,nNotas):
+    for i in range(0,nNotas):
         notaActual = midi.instruments[n_instrument].notes[i]
         dT = abs(notaActual.start - notaAnterior.start)
-        print("DT " ,dT)
+        #print("DT " ,dT)
         T = abs(notaActual.end - notaActual.start )
-        print("T " ,T)
+        #print("T " ,T)
         P = notaActual.pitch
-        print("p " ,P)
+        #print("p " ,P)
         #print(notaActual)
-        notas[i-1][0] = dT/tempo
-        notas[i-1][1] = aproximar(T/tempo)#notaActual.end#T#  /tempo#a
-        notas[i-1][2] = P
-
+        notas[i][0] = dT/tempo
+        notas[i][1] = aproximar(T/tempo)
+        notas[i][2] = P
 
         notaAnterior = notaActual
 
-    return notas
+    return notas, tempo
 
-joblib.dump(get_vector('himno.mid',0),"notas.pkl")
+def reconstruirCancion(vector, tempo):
+    i=0
+    ac = 0
+    print ("TEMPO", tempo)
+    rec = pm.PrettyMIDI(initial_tempo=tempo*60)
+    inst = pm.Instrument(program=1, is_drum=False, name='piano')
+    rec.instruments.append(inst)
 
+    for x in vec:
+        ac+=x[0]*tempo
+        p = x[2]
+        start = ac
+        end = ac + aproximarInversa(x[1],tempo)
+        #print ( p , start , end)
+        inst.notes.append(pm.Note(100, int(p), start ,end))
+        i+=1
+    return rec
 
-
-#for x in get_vector('himno.mid',0):
-#    print (x)
+#joblib.dump(get_vector('himno.mid',0),"notas.pkl")
+'''vec = Vector [dt, T , p]
+    tempo = tempo en bpSecond ( ya que lo dividimos entre 60)
+'''
+vec , tempo = get_vector('himno.mid',0)
+midi_out = reconstruirCancion(vec,tempo)
+midi_out.write('himno_r.mid')
