@@ -34,11 +34,16 @@ n_classes = 101
 
 
 
+
+
 #======================= prediciones====================
 
 tam = 1000
 
 o1, o2, o3 = modelo.predict([i_dt[:tam], i_t[:tam], i_p[:tam]])
+
+o1 = scaler_dt.inverse_transform(o1)
+o2 = scaler_t.inverse_transform(o2)
 
 midi = []
 

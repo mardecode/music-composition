@@ -57,7 +57,7 @@ def aproximar(d):
     return aprox
 
 def aproximarInversa(i, tempo):
-    i = np.clip(i , 0, 4)
+    # i = np.clip(i , 0, 4)
     return duracionSet[int(i)]*tempo
 
 def read_midis(path, instrument = 0):
