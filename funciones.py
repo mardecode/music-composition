@@ -125,4 +125,8 @@ def reconstruirCancion(vector, tempo):
 
         inst.notes.append(pm.Note(100, int(p), start ,end))
         i+=1
+
+    plt.figure(figsize=(12, 4))
+    plot_piano_roll(rec.instruments[0], 24, 84)
+    plt.show()
     return rec

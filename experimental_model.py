@@ -1,11 +1,11 @@
 from keras.layers import Input, Dense, LSTM, concatenate, CuDNNLSTM
-from keras.models import Model
+from keras.models import Model,load_model
 from sklearn.externals import joblib
 import numpy as np
 
-dt = joblib.load("dts.pkl")
-t = joblib.load("ts.pkl")
-p = joblib.load("ps.pkl")
+dt = joblib.load("datos/dts.pkl")
+t = joblib.load("datos/ts.pkl")
+p = joblib.load("datos/ps.pkl")
 
 
 n = len(dt)
@@ -45,7 +45,7 @@ input_t = Input(shape = (1, 1), name = "input_t")
 lstm_t = CuDNNLSTM(64, return_sequences = True)(input_t)
 
 input_p = Input(shape = (1, n_classes), name = "input_p")
-lstm_p = CuDNNLSTM(128, return_sequences = True)(input_p)
+lstm_p = CuDNNLSTM(100, return_sequences = True)(input_p)
 
 
 hold_input = concatenate([lstm_dt, lstm_t, lstm_p])
@@ -59,7 +59,7 @@ dt_output = Dense(1, activation = "relu", name = "dt_output")(lstm_dt_o)
 lstm_t_o = CuDNNLSTM(64)(main_lstm)
 t_output = Dense(1, activation = "relu", name = "t_output")(lstm_t_o)
 
-lstm_p_o = CuDNNLSTM(128)(main_lstm)
+lstm_p_o = CuDNNLSTM(100)(main_lstm)
 p_output = Dense(n_classes, activation = "sigmoid", name = "p_output")(lstm_p_o)
 
 
@@ -68,14 +68,14 @@ model = Model(inputs=[input_dt, input_t, input_p], outputs=[dt_output, t_output,
 model.compile(optimizer='rmsprop',
               loss={'dt_output': 'mean_squared_error', 't_output': 'mean_squared_error', 'p_output': 'binary_crossentropy'})
 
+model = load_model("modelos/modelo_experimental6.h5")
 model.fit({'input_dt': i_dt, 'input_t': i_t, 'input_p': i_p},
           {'dt_output': o_dt, 't_output': o_t, 'p_output': o_p},
-
-          epochs=15, batch_size=128)
+          epochs=10, batch_size=130)
 
 model.summary()
 
-model.save("modelos/modelo_experimental.h5")
+model.save("modelos/modelo_experimental7.h5")
 # metrics = {'dt_output': ['mse', 'accuracy'], 't_output': ['mse', 'accuracy'], 'p_output': ['mse', 'accuracy']},
 a, b, c = model.predict([i_dt[:3], i_t[:3], i_p[:3]])
 print("p: ", c)

@@ -10,7 +10,7 @@ scaler_t = joblib.load("datos/scaler_t.pkl")
 scaler_dt = joblib.load("datos/scaler_dt.pkl")
 
 
-modelo = load_model("modelos/modelo_experimental.h5")
+modelo = load_model("modelos/modelo_experimental7.h5")
 
 
 n = len(dt)
@@ -33,9 +33,6 @@ o_p = o_p.reshape(n, 101)
 n_classes = 101
 
 
-
-
-
 #======================= prediciones====================
 
 tam = 1000
@@ -52,6 +49,6 @@ for i in range(0, tam):
 
 midi = np.array(midi)
 
-midi_out = reconstruirCancion(midi, 3)
+midi_out = reconstruirCancion(midi, 20)
 
-midi_out.write("confe.mid")
+midi_out.write("confe_8.mid")
